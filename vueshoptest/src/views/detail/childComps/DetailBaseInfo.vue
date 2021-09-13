@@ -1,0 +1,69 @@
+<template>
+    <div class="detail_info">
+        <h5 class="title">{{goodsInfo.title}}</h5>
+        <div class="price">
+            <span class="new_Price">{{goodsInfo.newPrice}}</span>
+            <span class="odl_Price">{{goodsInfo.oldPrice}}</span>
+            <span class="discount">{{goodsInfo.discount}}</span>
+        </div>
+        <div class="columns">
+            <span v-for="(item , index) in goodsInfo.columns" :key="index">{{item}}</span>
+        </div>
+        <div class="services">
+            <div class="services_item" v-for="(item , index) in goodsInfo.services" :key="index">
+                <img :src="item.icon" />
+                <span>{{item.name}}</span>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name : 'DetailBaseInfo',
+    props:{
+        goodsInfo:{
+            type : Object , 
+            default(){
+                return {};
+            }
+        }
+    },
+    data(){
+        return {};
+    }
+}
+</script>
+
+<style lang="less" scoped>
+.detail_info{
+    padding: 0 0.2rem;
+    .title{
+        font-size: 0.26rem;
+        margin: 0.2rem 0;
+    }
+    .price{
+        display: flex;
+        align-items: center;
+        margin: 0.3rem 0;
+        .new_Price{
+            font-size: 0.6rem;
+            color: #f02430;
+        }
+        .odl_price{
+            font-size: 0.3rem;
+            color: gray;
+            margin: 0 10px;
+            align-self: flex-end;
+            text-decoration: line-through;
+        }
+        .discount{
+            font-size: 0.3rem;
+            color: white;
+            padding: 0.08rem;
+            background-image: linear-gradient(to right , #f02430 , #f9615e);
+            border-radius: 0.1rem;
+        }
+    }
+}
+</style>
