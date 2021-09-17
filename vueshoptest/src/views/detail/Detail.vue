@@ -28,7 +28,7 @@
 
 <script>
 //js网络请求模块
-import {getDetail , getRecommend , Goods , Shop} from '../../network/request.js'
+import {getDetail , getRecommend , Goods , Shop} from '../../network/detail'
 
 import DetailSwiper from './childComps/DetailSwiper.vue' //轮播图组件
 import DetailBaseInfo from './childComps/DetailBaseInfo.vue' //商品基本信息组件
@@ -81,8 +81,101 @@ export default {
 
             //es6 语法中的创建一个实例对象 记住，一定要加new;
             //创建商品信息数据对象
-            
-        })
+            this.goodsInfo = new Goods(result.itemInfo , result.column , result.shopInfo.services)
+            // console.log(this.goodsInfo)
+
+            //创建店铺信息数据对象
+            this.shopInfo = new Shop(result.shopInfo);
+            // console.log(this.shopInfo)
+
+            //取出商品详情信息
+            this.detailInfo = result.detailInfo;
+            // console.log(this.detailInfo)
+
+            //取出参数的信息
+            this.paramsInfo = result.itemParams
+            // console.log(result.itemParams)
+
+            //取出商品的评论信息
+            if(result.rate.cRate !== 0){ //因为有的商品没有评论信息，所以这里要做一个判断
+                this.commentInfo = result.rate.list[0];
+            }
+        });
+
+        //商品推荐接口请求
+        getRecommend().then((res) =>{
+            const {list} = res.data;
+            // this.recommend = list;
+            // console.log(recommend)
+            let temp = [];
+            for(let i in list){
+                temp.push(list[i]);
+            }
+            this.recommend = temp;
+        });
+
+
+        // this.$nextTick(() =>{
+        //     // 将回调延迟到下次 DOM 更新循环之后执行。在修改数据之后立即使用它，然后等待 DOM 更新。
+        // });
+
+        // setTimeout(() => {
+        //     // 将商品、推荐、参数、评论距离顶部的距离分别放在一个数组中
+        //     this.themeTopYs.push(0); //商品距离顶部的距离是0
+        //     this.themeTopYs.push(this.$refs.paramsRef.$el.offsetTop); //$el 是拿到对应的元素节点
+        //     this.themeTopYs.push(this.$refs.commentRef.$el.offsetTop);
+        //     this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
+        //     console.log(this.themeTopYs)
+        //     console.log(this.$refs.commentRef.$el)
+        // }, 200);
+    },
+    methods:{
+        //返回到home页面
+        onClickLeft(){
+            this.$router.go(-1)
+        },
+        // 点击切换标题栏
+        changeIndex(i){
+            this.contIndex = i
+            console.log(this.contIndex)
+            this.$refs.swiper.scrollTo(0 , -1000 , 300)
+        },
+        //1、点击商品添加到购物车
+        addCart(){
+            let product = {} //用来保存添加到购物车中商品的信息 需要展示的信息
+            product.img = this.detailSwiper[0]; //用来保存一张商品的图片
+            product.title = this.goodsInfo.title //商品标题
+            product.desc = this.goodsInfo.desc //商品描述
+            product.price = this.goodsInfo.realPrice //商品的价格
+            product.iid = this.iid //商品的id
+            product.count = 1 //商品的数量 默认是1
+            //2、将商品添加到购物车中
+            this.$store.dispatch('addProduct' , product);
+            this.$toast.setDefaultOptions({duration : 1000});//默认弹窗时间
+            this.$toast("添加商品成功");
+        }
     }
 }
 </script>
+
+<style lang="less" scoped>
+.detail{
+    padding-bottom: 1rem;
+}
+.van-icon ::before{
+    color: gray;
+}
+.title{
+    display: flex;
+    justify-content: space-between;
+    color: gray;
+    font-size: 0.28rem;
+}
+.active{
+    color: #ef232f;
+}
+.footer_bar{
+    position: relative;
+    z-index: 999;
+}
+</style>

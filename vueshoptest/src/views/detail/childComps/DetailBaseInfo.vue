@@ -65,5 +65,26 @@ export default {
             border-radius: 0.1rem;
         }
     }
+    .columns{
+        display: flex;
+        justify-content: space-between;
+        span{
+            line-height: 0.6rem;
+            color: gray;
+            font-size: 0.28rem;
+        }
+    }
+    .services{
+        justify-content: space-between;
+        display: flex;
+        align-items: center;
+        img{
+            height: 0.24rem;
+            width: 0.24rem;
+        }
+        span{
+            font-size: 0.22rem;
+        }
+    }
 }
 </style>
